@@ -29,7 +29,6 @@ historyRoute.get("/all", auth, async (req, res) => {
           });
           setTimeout(() => resolve(data), 1000);
         }).then((response) => {
-          console.log(response);
           res.send(response);
         });
       });
