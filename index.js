@@ -3,7 +3,13 @@ const cors = require("cors");
 const app = express();
 const apiRouter = require("./routers/routers");
 
-app.use(cors());
+const origin = {
+  origin: process.env.CORS_ORIGIN,
+  credentials: true,
+};
+
+app.use(cors(origin));
+app.options("*", cors(origin));
 app.use(express.json());
 app.use(apiRouter);
 
