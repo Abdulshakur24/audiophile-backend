@@ -4,6 +4,10 @@ CREATE TABLE users (
     email VARCHAR(50) NOT NULL,
     password VARCHAR(100) NOT NULL
 );
+ALTER TABLE users
+alter COLUMN password DROP NOT NULL;
+ALTER TABLE users
+ADD COLUMN google_id TEXT NULL;
 CREATE TABLE history_purchase (
     id SERIAL PRIMARY KEY,
     stripe_id TEXT UNIQUE NOT NULL,
