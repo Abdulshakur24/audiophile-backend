@@ -21,7 +21,7 @@ passport.use(
   new GoogleStrategy(
     {
       callbackURL:
-        " https://audiophile-e-commerce.herokuapp.com/auth/google/redirect",
+        "https://audiophile-e-commerce.herokuapp.com/auth/google/redirect",
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SERCRET,
     },
