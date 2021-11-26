@@ -14,7 +14,7 @@ const login = async (req, res) => {
       return res.status(400).send("Please fill out the fields.");
 
     await pool
-      .query("SELECT * FROM users WHERE email = $1;", [email])
+      .query("SELECT id, name, email FROM users WHERE email = $1;", [email])
       .then(async (response) => {
         const user = response.rows[0];
 
@@ -102,10 +102,10 @@ const token = async (req, res) => {
 
     if (id) {
       await pool
-        .query("SELECT * FROM users WHERE id = $1 AND email = $2 ;", [
-          id,
-          email,
-        ])
+        .query(
+          "SELECT id, name, email FROM users WHERE id = $1 AND email = $2 ;",
+          [id, email]
+        )
         .then(async (response) => {
           if (!response.rows.length)
             return res.status(401).send("Account Not Found.");

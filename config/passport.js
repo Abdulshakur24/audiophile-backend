@@ -2,14 +2,12 @@ require("dotenv").config();
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const pool = require("../database/db");
-const jwt = require("jsonwebtoken");
 
-passport.serializeUser((token, done) => {
-  done(null, token);
+passport.serializeUser((user, done) => {
+  done(null, user);
 });
 
 passport.deserializeUser(async (user, done) => {
-  console.log(user);
   await pool
     .query("SELECT name, email, google_id FROM users WHERE id=$1", [user.id])
     .then((response) => {
@@ -24,7 +22,7 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SERCRET,
     },
-    async (accessToken, refreshToken, profile, done) => {
+    async (_, __, profile, done) => {
       await pool
         .query("SELECT id, name, email FROM users WHERE google_id=$1", [
           profile.id,
@@ -32,11 +30,7 @@ passport.use(
         .then(async (userExist) => {
           if (userExist.rowCount) {
             const user = userExist.rows[0];
-            const token = jwt.sign(user, process.env.SECRET_TOKEN_KEY, {
-              expiresIn: "12h",
-            });
-
-            done(null, token);
+            done(null, user);
             return;
           }
           const name = profile.displayName,
@@ -50,11 +44,8 @@ passport.use(
             )
             .then((newUser) => {
               const user = newUser.rows[0];
-              const token = jwt.sign(user, process.env.SECRET_TOKEN_KEY, {
-                expiresIn: "12h",
-              });
 
-              done(null, token);
+              done(null, user);
             });
         });
     }
