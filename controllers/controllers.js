@@ -14,7 +14,9 @@ const login = async (req, res) => {
       return res.status(400).send("Please fill out the fields.");
 
     await pool
-      .query("SELECT id, name, email FROM users WHERE email = $1;", [email])
+      .query("SELECT id, name, password, email FROM users WHERE email = $1;", [
+        email,
+      ])
       .then(async (response) => {
         const user = response.rows[0];
 
@@ -29,10 +31,11 @@ const login = async (req, res) => {
 
           return res.status(200).json(user);
         }
-        return res.status(403).send("Incorrect Email/Password.");
+        res.status(403).send("Incorrect Email/Password.");
       })
       .catch((error) => {
-        res.sendStatus(403);
+        console.log(error);
+        res.status(403).send("Please check your connection.");
       });
   } catch (error) {
     res.sendStatus(500);
@@ -116,7 +119,6 @@ const token = async (req, res) => {
             { expiresIn: "12h" }
           );
           user.token = token;
-          delete user.password;
 
           return res.status(200).json(user);
         });

@@ -21,7 +21,11 @@ router.get(
     });
 
     res
-      .cookie("A_JWT", token)
+      .cookie("A_JWT", token, {
+        httpOnly: true,
+        sameSite: isProduction ? "none" : "lax",
+        secure: isProduction ? true : false,
+      })
       .redirect(
         isProduction
           ? process.env.GOOGLE_FRONT_END_REDIRECT_URL

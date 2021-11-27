@@ -39,8 +39,8 @@ passport.use(
 
           await pool
             .query(
-              "INSERT INTO users (name, email, google_id) VALUES ($1, $2, $3) RETURNING id, name, email;",
-              [name, email, google_id]
+              "INSERT INTO users (name, email, password, google_id) VALUES ($1, $2, $3, $4) RETURNING id, name, email;",
+              [name, email, null, google_id]
             )
             .then((newUser) => {
               const user = newUser.rows[0];
